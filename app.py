@@ -1,8 +1,15 @@
 import streamlit as st
 from google import genai
 
-st.set_page_config(page_title="Self Doc AI", page_icon="🩺", layout="centered")
+# Page Configuration & Search Engine Optimization (SEO) Metadata
+st.set_page_config(
+    page_title="Self Doc AI - Trusted Health & Medicine Guide Bangladesh",
+    page_icon="🩺",
+    layout="centered",
+    initial_sidebar_state="collapsed"
+)
 
+# Custom CSS for professional medical styling & interactive buttons
 st.markdown("""
     <style>
     .stApp {
@@ -14,6 +21,7 @@ st.markdown("""
     }
     h1, h2, h3 {
         color: #38bdf8 !important;
+        font-family: "Helvetica Neue", sans-serif;
     }
     .stTextInput input {
         background-color: #1e293b;
@@ -21,20 +29,48 @@ st.markdown("""
         border: 1px solid #38bdf8;
         border-radius: 8px;
     }
+    .stButton button {
+        background-color: #1e293b;
+        color: #38bdf8;
+        border: 1px solid #38bdf8;
+        border-radius: 8px;
+        width: 100%;
+    }
+    .stButton button:hover {
+        background-color: #38bdf8;
+        color: #0f172a;
+    }
     </style>
 """, unsafe_allow_html=True)
 
 st.title("🩺 Self Doc AI")
 st.markdown("### Your Safe, Trusted Educational Health Companion for Bangladesh")
+st.write("Get instant, reliable educational information about common medicines, standard usages, and safety guidelines.")
 
-# Fetch API key securely from Streamlit server secrets (no user input needed!)
+# Fetch API key securely from Streamlit server secrets
 try:
     api_key = st.secrets["GEMINI_API_KEY"]
 except Exception:
     st.error("⚠️ API Key is not configured on the server. Please add it to Streamlit Secrets.")
     api_key = None
 
-user_query = st.text_input("🔍 What medicine or symptom would you like to check? (Type in English, Bangla, or Banglish):")
+# Quick-Click Preset Query Buttons for Common Topics
+st.markdown("#### 💡 Quick Health Topics (Click to Check):")
+col1, col2, col3 = st.columns(3)
+
+selected_query = ""
+with col1:
+    if st.button("Paracetamol Info"):
+        selected_query = "What are the standard educational guidelines and age-based precautions for taking Paracetamol in Bangladesh?"
+with col2:
+    if st.button("Cold & Fever Care"):
+        selected_query = "What are safe home remedies and general educational guidelines for common cold and fever?"
+with col3:
+    if st.button("Antacid Guidance"):
+        selected_query = "What is the general educational guidance on taking antacids for acidity?"
+
+# Text input for custom searches (pre-fills if a quick button is clicked)
+user_query = st.text_input("🔍 Or type your health or medicine question below (English, Bangla, or Banglish):", value=selected_query)
 
 if user_query and api_key:
     with st.spinner("Self Doc AI is analyzing safely..."):
@@ -43,10 +79,14 @@ if user_query and api_key:
             prompt = f"""
             You are an AI medical educational assistant for Bangladesh. 
             The user is asking in English, Bangla, or Banglish about: {user_query}
-            Provide general educational information about common medicine usage and safety precautions.
+            Provide clear, structured educational information about common medicine usage, standard classifications, and safety precautions.
+            If the user writes in Bangla or Banglish, reply clearly in an easy-to-understand manner.
             Always remind the user to consult a registered MBBS doctor or pharmacist in Bangladesh.
             """
             response = client.models.generate_content(model="gemini-3.8-flash", contents=prompt)
+            
+            st.markdown("---")
+            st.markdown("### 📋 Educational Guidance")
             st.markdown(response.text)
         except Exception as e:
             st.error(f"An error occurred: {e}")
