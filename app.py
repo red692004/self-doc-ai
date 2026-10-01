@@ -11,7 +11,7 @@ st.set_page_config(
 
 # Inject Google Search Console Verification Meta Tag into the Web Header
 st.markdown(
-    '<meta name="google-site-verification" content="google36f49e9d23fb7ae3" />',
+    '<meta name="google-site-verification" content="R-6MH_ROC0NDVcw0hGXjtujISiUFecwAvFEVGHoZMSQ" />',
     unsafe_allow_html=True
 )
 
