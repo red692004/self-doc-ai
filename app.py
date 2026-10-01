@@ -1,76 +1,107 @@
 import streamlit as st
 from google import genai
 
-# Page Configuration & Search Engine Optimization (SEO) Metadata
+# Page Configuration & SEO
 st.set_page_config(
     page_title="Self Doc AI - Trusted Health & Medicine Guide Bangladesh",
     page_icon="🩺",
-    layout="centered",
-    initial_sidebar_state="expanded"
+    layout="wide",
+    initial_sidebar_state="collapsed"
 )
 
-# Custom CSS for professional medical styling & interactive buttons
+# Custom High-End Modern Medical Styling CSS
 st.markdown("""
     <style>
     .stApp {
-        background: linear-gradient(rgba(15, 23, 42, 0.85), rgba(15, 23, 42, 0.85)), 
+        background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.90)), 
                     url("https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=1920&q=80");
         background-size: cover;
         background-position: center;
-        color: #ffffff;
+        color: #f8fafc;
+        font-family: 'Inter', -apple-system, sans-serif;
     }
+    
+    /* Hide default streamlit elements for a clean product look */
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    header {visibility: hidden;}
+
+    /* Typography */
     h1, h2, h3 {
         color: #38bdf8 !important;
-        font-family: "Helvetica Neue", sans-serif;
+        font-weight: 700;
     }
+
+    /* Sleek Clean Search Input Bar */
     .stTextInput input {
-        background-color: #1e293b;
-        color: #ffffff;
-        border: 1px solid #38bdf8;
-        border-radius: 8px;
+        background-color: rgba(30, 41, 59, 0.8) !important;
+        color: #ffffff !important;
+        border: 2px solid #38bdf8 !important;
+        border-radius: 12px !important;
+        padding: 14px !important;
+        font-size: 16px !important;
     }
+    .stTextInput input:focus {
+        border-color: #7dd3fc !important;
+        box-shadow: 0 0 15px rgba(56, 189, 248, 0.3);
+    }
+
+    /* Modern Action Buttons */
     .stButton button {
-        background-color: #1e293b;
+        background-color: rgba(30, 41, 59, 0.9);
         color: #38bdf8;
-        border: 1px solid #38bdf8;
-        border-radius: 8px;
+        border: 1px solid rgba(56, 189, 248, 0.4);
+        border-radius: 10px;
+        padding: 10px 16px;
+        font-weight: 600;
+        transition: all 0.3s ease;
         width: 100%;
     }
     .stButton button:hover {
         background-color: #38bdf8;
         color: #0f172a;
+        border-color: #38bdf8;
+        box-shadow: 0 4px 12px rgba(56, 189, 248, 0.4);
+    }
+
+    /* Content Card Containers */
+    .css-1r6slb0, .element-container {
+        border-radius: 16px;
     }
     </style>
 """, unsafe_allow_html=True)
 
-# Sidebar Configuration & Language Selection
-st.sidebar.header("⚙️ Settings & Options")
-language_choice = st.sidebar.selectbox(
-    "Choose Language / ভাষা নির্বাচন করুন:",
-    ["English", "Bangla (বাংলা)"]
-)
+# Top Header Layout (Language Switcher on the Right side)
+header_col1, header_col2 = st.columns([3, 1])
 
-st.sidebar.markdown("---")
-st.sidebar.markdown("### ℹ️ About Self Doc AI")
-st.sidebar.info(
-    "Designed for Bangladesh. Provides preliminary educational health information and connects users with medical guidance."
-)
+with header_col1:
+    st.title("🩺 Self Doc AI")
+    st.markdown("##### Your Safe, Trusted Educational Health Companion for Bangladesh")
 
-# Main Title & Subtitle based on language selection
+with header_col2:
+    st.markdown("<div style='text-align: right;'>", unsafe_allow_html=True)
+    language_choice = st.selectbox(
+        "Language / ভাষা",
+        ["English", "Bangla (বাংলা)"],
+        label_visibility="collapsed"
+    )
+    st.markdown("</div>", unsafe_allow_html=True)
+
+st.markdown("---")
+
+# Dynamic UI labels based on language selection
 if language_choice == "Bangla (বাংলা)":
-    st.title("🩺 সেলফ ডক এআই (Self Doc AI)")
-    st.markdown("### বাংলাদেশের জন্য আপনার বিশ্বস্ত স্বাস্থ্য ও ওষুধের তথ্য সহায়িকা")
     subtitle_text = "ওষুধের ব্যবহার, সাধারণ মাত্রা এবং স্বাস্থ্য সচেতনতা সম্পর্কিত নির্ভরযোগ্য তথ্য জেনে নিন।"
     search_label = "🔍 আপনার স্বাস্থ্য বা ওষুধ সংক্রান্ত প্রশ্ন এখানে লিখুন (বাংলা বা ইংরেজিতে):"
     guidance_title = "📋 শিক্ষণীয় পরামর্শ"
     safety_text = "⚠️ **সতর্কতা:** যেকোনো ওষুধ সেবন করার পূর্বে অবশ্যই বাংলাদেশের একজন রেজিস্টার্ড এমবিবিএস ডাক্তার বা ফার্মাসিস্টের পরামর্শ নিন।"
+    topics_title = "💡 সাধারণ স্বাস্থ্য বিষয়সমূহ (ক্লিক করুন):"
 else:
-    st.title("🩺 Self Doc AI")
-    st.markdown("### Your Safe, Trusted Educational Health Companion for Bangladesh")
     subtitle_text = "Get instant, reliable educational information about common medicines, standard usages, and safety guidelines."
-    search_label = "🔍 Or type your health or medicine question below (English, Bangla, or Banglish):"
+    search_label = "🔍 Type your health or medicine question below (English, Bangla, or Banglish):"
     guidance_title = "📋 Educational Guidance"
     safety_text = "⚠️ **Safety Notice:** Always consult a registered MBBS doctor or pharmacist in Bangladesh before taking any medication."
+    topics_title = "💡 Quick Health Topics (Click to Check):"
 
 # Fetch API key securely from Streamlit server secrets
 try:
@@ -85,8 +116,8 @@ tab1, tab2, tab3 = st.tabs(["🤖 AI Health Guide", "💬 Free Doctor Consultati
 with tab1:
     st.write(subtitle_text)
     
-    # Quick-Click Preset Query Buttons for Common Topics
-    st.markdown("#### 💡 Quick Health Topics (Click to Check):")
+    # Quick-Click Preset Query Buttons
+    st.markdown(f"#### {topics_title}")
     col1, col2, col3 = st.columns(3)
 
     selected_query = ""
@@ -100,15 +131,15 @@ with tab1:
         if st.button("Antacid Guidance"):
             selected_query = "What is the general educational guidance on taking antacids for acidity?"
 
-    # Text input for custom searches
-    user_query = st.text_input(search_label, value=selected_query)
+    st.markdown("<br>", unsafe_allow_html=True)
+
+    # Sleek text input for custom searches
+    user_query = st.text_input(search_label, value=selected_query, label_visibility="visible")
 
     if user_query and api_key:
         with st.spinner("Analyzing safely..." if language_choice == "English" else "বিশ্লেষণ করা হচ্ছে..."):
             try:
                 client = genai.Client(api_key=api_key)
-                
-                # Instruction to force the AI to match the chosen language
                 lang_instruction = "Reply entirely in fluent Bangla." if language_choice == "Bangla (বাংলা)" else "Reply in clear English."
                 
                 prompt = f"""
@@ -126,6 +157,7 @@ with tab1:
             except Exception as e:
                 st.error(f"An error occurred: {e}")
 
+        st.markdown("<br>", unsafe_allow_html=True)
         st.warning(safety_text)
 
 with tab2:
