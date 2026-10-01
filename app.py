@@ -9,6 +9,12 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
+# Inject Google Search Console Verification Meta Tag into the Web Header
+st.markdown(
+    '<meta name="google-site-verification" content="google36f49e9d23fb7ae3" />',
+    unsafe_allow_html=True
+)
+
 # Custom High-End Modern Medical Styling CSS
 st.markdown("""
     <style>
@@ -21,18 +27,15 @@ st.markdown("""
         font-family: 'Inter', -apple-system, sans-serif;
     }
     
-    /* Hide default streamlit elements for a clean product look */
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
     header {visibility: hidden;}
 
-    /* Typography */
     h1, h2, h3 {
         color: #38bdf8 !important;
         font-weight: 700;
     }
 
-    /* Sleek Clean Search Input Bar */
     .stTextInput input {
         background-color: rgba(30, 41, 59, 0.8) !important;
         color: #ffffff !important;
@@ -46,7 +49,6 @@ st.markdown("""
         box-shadow: 0 0 15px rgba(56, 189, 248, 0.3);
     }
 
-    /* Modern Action Buttons */
     .stButton button {
         background-color: rgba(30, 41, 59, 0.9);
         color: #38bdf8;
@@ -63,15 +65,10 @@ st.markdown("""
         border-color: #38bdf8;
         box-shadow: 0 4px 12px rgba(56, 189, 248, 0.4);
     }
-
-    /* Content Card Containers */
-    .css-1r6slb0, .element-container {
-        border-radius: 16px;
-    }
     </style>
 """, unsafe_allow_html=True)
 
-# Top Header Layout (Language Switcher on the Right side)
+# Top Header Layout
 header_col1, header_col2 = st.columns([3, 1])
 
 with header_col1:
@@ -89,7 +86,7 @@ with header_col2:
 
 st.markdown("---")
 
-# Dynamic UI labels based on language selection
+# Dynamic UI labels
 if language_choice == "Bangla (বাংলা)":
     subtitle_text = "ওষুধের ব্যবহার, সাধারণ মাত্রা এবং স্বাস্থ্য সচেতনতা সম্পর্কিত নির্ভরযোগ্য তথ্য জেনে নিন।"
     search_label = "🔍 আপনার স্বাস্থ্য বা ওষুধ সংক্রান্ত প্রশ্ন এখানে লিখুন (বাংলা বা ইংরেজিতে):"
@@ -116,7 +113,6 @@ tab1, tab2, tab3 = st.tabs(["🤖 AI Health Guide", "💬 Free Doctor Consultati
 with tab1:
     st.write(subtitle_text)
     
-    # Quick-Click Preset Query Buttons
     st.markdown(f"#### {topics_title}")
     col1, col2, col3 = st.columns(3)
 
@@ -133,7 +129,6 @@ with tab1:
 
     st.markdown("<br>", unsafe_allow_html=True)
 
-    # Sleek text input for custom searches
     user_query = st.text_input(search_label, value=selected_query, label_visibility="visible")
 
     if user_query and api_key:
@@ -165,15 +160,15 @@ with tab2:
     st.markdown("""
     *Connect with on-duty volunteer medical students and general practitioners for basic case reviews.*
     
-    * **Status:** 🚧 **Coming Soon** — We are currently onboarding verified doctors and medical volunteers in Bangladesh.
-    * **How it will work:** Submit your case history and reports here to enter the community consultation queue for a free preliminary evaluation.
+    * **Status:** 🚧 **Coming Soon** — We are onboarding verified doctors and medical volunteers in Bangladesh.
+    * **How it will work:** Submit your case history and reports here to enter the community consultation queue for preliminary evaluation.
     """)
     st.info("Stay tuned! This feature will go live as soon as our initial doctor network partnerships are finalized.")
 
 with tab3:
     st.markdown("### ⭐ Paid Expert Consultation (Specialist Booking)")
     st.markdown("""
-    *Book direct video appointments or priority text chats with verified specialist physicians (Cardiologists, Pediatricians, Gynecologists, etc.).*
+    *Book direct video appointments or priority text chats with verified specialist physicians (Cardiologists, Pediatricians, etc.).*
     
     * **Status:** 🚧 **Coming Soon** — Integrated bKash/Nagad payment gateways and secure video scheduling are under development.
     * **Benefits:** Guaranteed rapid response times, prescription generation by certified specialists, and direct follow-up chats.
