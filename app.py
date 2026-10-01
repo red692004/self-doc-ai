@@ -4,7 +4,7 @@ from google import genai
 # Page Configuration & SEO
 st.set_page_config(
     page_title="Self Doc AI - Trusted Health & Medicine Guide Bangladesh",
-    google-site-verification: google36f49e9d23fb7ae3.html
+    google36f49e9d23fb7ae3.html
     page_icon="🩺",
     layout="wide",
     initial_sidebar_state="collapsed"
