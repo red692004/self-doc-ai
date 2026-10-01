@@ -45,7 +45,6 @@ st.markdown("""
 
 st.title("🩺 Self Doc AI")
 st.markdown("### Your Safe, Trusted Educational Health Companion for Bangladesh")
-st.write("Get instant, reliable educational information about common medicines, standard usages, and safety guidelines.")
 
 # Fetch API key securely from Streamlit server secrets
 try:
@@ -54,41 +53,67 @@ except Exception:
     st.error("⚠️ API Key is not configured on the server. Please add it to Streamlit Secrets.")
     api_key = None
 
-# Quick-Click Preset Query Buttons for Common Topics
-st.markdown("#### 💡 Quick Health Topics (Click to Check):")
-col1, col2, col3 = st.columns(3)
+# Main navigation tabs for AI Guide vs Doctor Consultations
+tab1, tab2, tab3 = st.tabs(["🤖 AI Health Guide", "💬 Free Doctor Consultation", "⭐ Paid Expert Consultation"])
 
-selected_query = ""
-with col1:
-    if st.button("Paracetamol Info"):
-        selected_query = "What are the standard educational guidelines and age-based precautions for taking Paracetamol in Bangladesh?"
-with col2:
-    if st.button("Cold & Fever Care"):
-        selected_query = "What are safe home remedies and general educational guidelines for common cold and fever?"
-with col3:
-    if st.button("Antacid Guidance"):
-        selected_query = "What is the general educational guidance on taking antacids for acidity?"
+with tab1:
+    st.write("Get instant, reliable educational information about common medicines, standard usages, and safety guidelines.")
+    
+    # Quick-Click Preset Query Buttons for Common Topics
+    st.markdown("#### 💡 Quick Health Topics (Click to Check):")
+    col1, col2, col3 = st.columns(3)
 
-# Text input for custom searches (pre-fills if a quick button is clicked)
-user_query = st.text_input("🔍 Or type your health or medicine question below (English, Bangla, or Banglish):", value=selected_query)
+    selected_query = ""
+    with col1:
+        if st.button("Paracetamol Info"):
+            selected_query = "What are the standard educational guidelines and age-based precautions for taking Paracetamol in Bangladesh?"
+    with col2:
+        if st.button("Cold & Fever Care"):
+            selected_query = "What are safe home remedies and general educational guidelines for common cold and fever?"
+    with col3:
+        if st.button("Antacid Guidance"):
+            selected_query = "What is the general educational guidance on taking antacids for acidity?"
 
-if user_query and api_key:
-    with st.spinner("Self Doc AI is analyzing safely..."):
-        try:
-            client = genai.Client(api_key=api_key)
-            prompt = f"""
-            You are an AI medical educational assistant for Bangladesh. 
-            The user is asking in English, Bangla, or Banglish about: {user_query}
-            Provide clear, structured educational information about common medicine usage, standard classifications, and safety precautions.
-            If the user writes in Bangla or Banglish, reply clearly in an easy-to-understand manner.
-            Always remind the user to consult a registered MBBS doctor or pharmacist in Bangladesh.
-            """
-            response = client.models.generate_content(model="gemini-3.8-flash", contents=prompt)
-            
-            st.markdown("---")
-            st.markdown("### 📋 Educational Guidance")
-            st.markdown(response.text)
-        except Exception as e:
-            st.error(f"An error occurred: {e}")
+    # Text input for custom searches
+    user_query = st.text_input("🔍 Or type your health or medicine question below (English, Bangla, or Banglish):", value=selected_query)
 
-    st.warning("⚠️ **Safety Notice:** Always consult a registered MBBS doctor or pharmacist in Bangladesh before taking any medication.")
+    if user_query and api_key:
+        with st.spinner("Self Doc AI is analyzing safely..."):
+            try:
+                client = genai.Client(api_key=api_key)
+                prompt = f"""
+                You are an AI medical educational assistant for Bangladesh. 
+                The user is asking in English, Bangla, or Banglish about: {user_query}
+                Provide clear, structured educational information about common medicine usage, standard classifications, and safety precautions.
+                If the user writes in Bangla or Banglish, reply clearly in an easy-to-understand manner.
+                Always remind the user to consult a registered MBBS doctor or pharmacist in Bangladesh.
+                """
+                response = client.models.generate_content(model="gemini-3.8-flash", contents=prompt)
+                
+                st.markdown("---")
+                st.markdown("### 📋 Educational Guidance")
+                st.markdown(response.text)
+            except Exception as e:
+                st.error(f"An error occurred: {e}")
+
+        st.warning("⚠️ **Safety Notice:** Always consult a registered MBBS doctor or pharmacist in Bangladesh before taking any medication.")
+
+with tab2:
+    st.markdown("### 💬 Free Doctor Consultation (Community Queue)")
+    st.markdown("""
+    *Connect with on-duty volunteer medical students and general practitioners for basic case reviews.*
+    
+    * **Status:** 🚧 **Coming Soon** — We are currently onboarding verified doctors and medical volunteers in Bangladesh.
+    * **How it will work:** Submit your case history and reports here to enter the community consultation queue for a free preliminary evaluation.
+    """)
+    st.info("Stay tuned! This feature will go live as soon as our initial doctor network partnerships are finalized.")
+
+with tab3:
+    st.markdown("### ⭐ Paid Expert Consultation (Specialist Booking)")
+    st.markdown("""
+    *Book direct video appointments or priority text chats with verified specialist physicians (Cardiologists, Pediatricians, Gynecologists, etc.).*
+    
+    * **Status:** 🚧 **Coming Soon** — Integrated bKash/Nagad payment gateways and secure video scheduling are under development.
+    * **Benefits:** Guaranteed rapid response times, prescription generation by certified specialists, and direct follow-up chats.
+    """)
+    st.success("Doctor applications and partnership onboarding will open during Phase 2 of our launch roadmap!")
